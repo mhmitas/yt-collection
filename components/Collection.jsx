@@ -65,14 +65,15 @@ export default function Component() {
                                         className="w-full h-full"
                                     ></iframe>
                                 </div>
-                                <div className="p-4 flex justify-between items-center">
-                                    <span className="text-sm font-medium">Video {index + 1}</span>
+                                <div className="p-4 py-1 flex justify-between items-center">
+                                    <span className="text-xs font-medium">Video {index + 1}</span>
                                     <Button
-                                        variant="destructive"
+                                        variant="ghost"
+                                        className="size-6"
                                         size="icon"
                                         onClick={() => removeVideo(index)}
                                     >
-                                        <Trash2 className="h-5 w-5" />
+                                        <Trash2 size={15} />
                                         <span className="sr-only">Remove video</span>
                                     </Button>
                                 </div>
