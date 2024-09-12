@@ -39,7 +39,7 @@ export default function Component() {
                     </div>
                     <Card className="mb-8 dark:bg-muted bg-background max-w-3xl border-none shadow-none">
                         <CardContent className="p-4">
-                            <form onSubmit={handleSubmit} className="flex gap-2">
+                            <form onSubmit={handleSubmit} className="flex flex-coll sm:flex-row gap-2">
                                 <Input
                                     type="text"
                                     value={videoLink}
