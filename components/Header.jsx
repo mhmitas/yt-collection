@@ -3,30 +3,37 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { ModeToggle } from './ModeToggle'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Check } from 'lucide-react'
+import { getVideoId, saveVideoToLocalStorage } from '@/lib/utils'
 
 const Header = ({
     videoLink,
     setVideoLink,
     videoLinks,
-    setVideoLinks
+    setVideoLinks,
+    session
 }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
         if (videoLink.trim() !== '') {
-            setVideoLinks([...videoLinks, getVideoId(videoLink)])
+            setVideoLinks([...videoLinks, {
+                videoId: getVideoId(videoLink),
+                createdAt: Date.now(),
+                pinned: false
+            }])
             setVideoLink('')
+        }
+        if (!session) {
+            saveToLocalStorage()
         }
     }
 
-    const getVideoId = (url) => {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
-        const match = url.match(regExp)
-        return (match && match[2].length === 11) ? match[2] : url
+    async function saveToLocalStorage() {
+        const videoId = getVideoId(videoLink)
+        await saveVideoToLocalStorage(videoId)
     }
-
 
     return (
         <header>
@@ -39,7 +46,7 @@ const Header = ({
                             <AvatarImage src="https://github.com/shadcn.png" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar> */}
-                        <Button size="sm">Sign In</Button>
+                        {/* <Button size="sm">Sign In</Button> */}
                     </div>
                 </div>
                 <Card className="dark:bg-muted bg-background max-w-3xl border-none shadow-none mx-auto pb-4">
@@ -53,7 +60,7 @@ const Header = ({
                                 placeholder="Paste YouTube video link here"
                                 className="flex-grow rounded-full rounded-r-none pl-6 sm:p-6 border-r-0 text-blue-500"
                             />
-                            <Button title="Click to save video" type="submit" className="border border-l-0 rounded-l-none sm:p-6 rounded-r-full"><Check /></Button>
+                            <Button disabled={videoLink.length < 11} title="Click to save video" type="submit" className="border border-l-0 rounded-l-none sm:p-6 rounded-r-full"><Check /></Button>
                         </form>
                     </CardContent>
                 </Card>
