@@ -21,8 +21,9 @@ const VideoCard = ({ video, index, removeVideo }) => {
                 <div className="p-4 py-1 flex justify-between items-center">
                     <span className="text-xs font-medium">Video {index + 1}</span>
                     <Button
+                        title="Click to remove"
                         variant="ghost"
-                        className="size-6"
+                        className="size-6 hover:text-red-600"
                         size="icon"
                         onClick={() => removeVideo(index, videoId, video?._id)}
                     >

@@ -39,7 +39,7 @@ const Header = ({
         <header>
             <div className='border h-max px-4 sm:px-6 py-6 sm:py-8 rounded-lg dark:bg-muted bg-background space-y-6 md:space-y-8 relative shadow'>
                 <div className="flex justify-between items-center">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold"><span className='text-red-500'>YouTube</span> Video Collection</h1>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold"><span className='text-[#ff0000]'>YouTube</span> Video Collection</h1>
                     <div className='flex items-center gap-2'>
                         <ModeToggle />
                         {/* <Avatar>
