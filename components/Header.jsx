@@ -35,10 +35,11 @@ const Header = ({
                     <h1 className="text-xl sm:text-2xl md:text-3xl font-bold"><span className='text-red-500'>YouTube</span> Video Collection</h1>
                     <div className='flex items-center gap-2'>
                         <ModeToggle />
-                        <Avatar>
+                        {/* <Avatar>
                             <AvatarImage src="https://github.com/shadcn.png" />
                             <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+                        </Avatar> */}
+                        <Button size="sm">Sign In</Button>
                     </div>
                 </div>
                 <Card className="dark:bg-muted bg-background max-w-3xl border-none shadow-none mx-auto pb-4">

@@ -1,12 +1,21 @@
 import React from 'react'
 import { Card, CardContent } from './ui/card'
 import { Button } from './ui/button'
-import { Trash2 } from 'lucide-react'
+import { Pin, Trash2 } from 'lucide-react'
 
 const VideosSection = ({ videoLinks }) => {
     return (
-        <section className='pt-1'>
-            {videoLinks.length > 0 && <div className='text-end'><Button className="" size="sm" variant="ghost">Clear all</Button></div>}
+        <section className='pt-1 flex-1'>
+            {videoLinks.length > 0 && <div className='flex justify-between items-center gap-4'>
+                <p className='text-xs sm:text-sm italic'>Videos will be removed after 1 hour. Pin videos to keep them saved!</p>
+                <Button className="h-7" size="sm" variant="outline">Clear all</Button>
+            </div>}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
+                {videoLinks.map((videoId, index) => (
+                    <VideoCard videoId={videoId} key={index} index={index} />
+                ))}
+            </div>
+            <p className='mt-10 font-medium pb-2 text-lg'>Pinned</p>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 pt-1">
                 {videoLinks.map((videoId, index) => (
                     <VideoCard videoId={videoId} key={index} index={index} />
