@@ -1,9 +1,9 @@
-import Component from "@/components/Collection";
+import Collection from "@/components/Collection";
 
 export default function Home() {
   return (
     <main className="bg-muted dark:bg-background">
-      <Component />
+      <Collection />
     </main>
   );
 }
