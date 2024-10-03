@@ -27,7 +27,7 @@ const VideoCard = ({ videoId, index }) => {
     }
 
     return (
-        <Card className="overflow-hidden transition-shadow duration-200 hover:shadow-lg">
+        <Card className="overflow-hidden transition-shadow duration-200 hover:shadow-lg max-w-lg mx-auto w-full">
             <CardContent className="p-0">
                 <div className="aspect-video">
                     <iframe

@@ -46,6 +46,7 @@ const Header = ({
                         <form onSubmit={handleSubmit} className="flex">
                             <Input
                                 type="url"
+                                name="videoLinks"
                                 value={videoLink}
                                 onChange={(e) => setVideoLink(e.target.value)}
                                 placeholder="Paste YouTube video link here"
