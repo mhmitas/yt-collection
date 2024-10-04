@@ -13,7 +13,7 @@ export default function Collection({ videos, session }) {
     }, [])
 
     function getLocalVideos() {
-        if (!videos) {
+        if (!videos && !session) {
             setVideoLinks(localStorage.getItem('videos') ? JSON.parse(localStorage.getItem('videos')) : [])
         }
     }

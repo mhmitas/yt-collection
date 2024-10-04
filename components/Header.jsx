@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { ModeToggle } from './ModeToggle'
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Check } from 'lucide-react'
 import { getVideoId, saveVideoToLocalStorage } from '@/lib/utils'
+import { saveVideo } from '@/lib/actions/video.action'
+import toast from 'react-hot-toast'
+import ProfileIcon from './ProfileIcon'
 
 const Header = ({
     videoLink,
@@ -15,20 +17,40 @@ const Header = ({
     session
 }) => {
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        if (videoLink.trim() !== '') {
-            setVideoLinks([...videoLinks, {
-                videoId: getVideoId(videoLink),
-                createdAt: Date.now(),
-                pinned: false
-            }])
-            setVideoLink('')
+
+        // simple validation
+        if (videoLink.trim() === '') {
+            return toast.error("Invalid video link")
         }
-        if (!session) {
+
+        const videoId = getVideoId(videoLink)
+
+        // set link to the state
+        setVideoLinks([{
+            videoId,
+            createdAt: Date.now(),
+            pinned: false
+        }, ...videoLinks])
+        setVideoLink('')
+
+        // if session exists, save to the database otherwise save to the local storage. 
+        if (session) {
+            try {
+                const res = await saveVideo({ videoId, userId: session?.user?.id })
+                if (res.error) {
+                    toast.error(res?.error)
+                }
+                console.log(res)
+            } catch (error) {
+                console.log(error)
+                toast.error(error?.message || "Something went wrong! Please try again later")
+            }
+        } else {
             saveToLocalStorage()
         }
-    }
+    };
 
     async function saveToLocalStorage() {
         const videoId = getVideoId(videoLink)
@@ -39,14 +61,10 @@ const Header = ({
         <header>
             <div className='border h-max px-4 sm:px-6 py-6 sm:py-8 rounded-lg dark:bg-muted bg-background space-y-6 md:space-y-8 relative shadow'>
                 <div className="flex justify-between items-center">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold"><span className='text-[#ff0000]'>YouTube</span> Video Collection</h1>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold"><span className='text-red-600 [#ff0000]'>YouTube</span> Video Collection</h1>
                     <div className='flex items-center gap-2'>
                         <ModeToggle />
-                        {/* <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar> */}
-                        {/* <Button size="sm">Sign In</Button> */}
+                        <ProfileIcon session={session} />
                     </div>
                 </div>
                 <Card className="dark:bg-muted bg-background max-w-3xl border-none shadow-none mx-auto pb-4">
