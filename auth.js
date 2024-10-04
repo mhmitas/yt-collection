@@ -14,7 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 // handle google sign in process
                 if (account.provider === "google") {
                     const existedUser = await User.findOne({ email: user.email });
-                    console.log({ existedUser: !!existedUser });
+                    // console.log({ existedUser: !!existedUser });
                     // check if the user already exists, and is verified
                     if (existedUser && existedUser?.verified) {
                         // if user exists and not from google provider, don't allow sign in;
@@ -45,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         if (!newUser) {
                             throw new Error("Google sign in failed");
                         }
-                        console.log("new user created");
+                        // console.log("new user created");
 
                         const newUserObj = await newUser.toObject();
 

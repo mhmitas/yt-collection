@@ -15,6 +15,7 @@ export default async function Home() {
   return (
     <main className="bg-muted dark:bg-background">
       <Collection session={session} videos={videos} />
+      <p className="text-sm text-center p-2">Please report for any issue: <a className="hover:underline" href="mailto:mhmitas.dev@gmail.com">mhmitas.dev@gmail.com</a></p>
     </main>
   );
 }

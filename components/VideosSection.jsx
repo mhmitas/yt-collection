@@ -1,34 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 import Videos from './videos'
 import { removeVideoFromLocalStorage } from '@/lib/utils'
 import askConfirm from './modals/askConfirm'
-import { deleteVideo } from '@/lib/actions/video.action'
+import { deleteAllVideos, deleteVideo } from '@/lib/actions/video.action'
+import toast from 'react-hot-toast'
 
 const VideosSection = ({ videoLinks, setVideoLinks, session }) => {
+    const [processing, setProcessing] = useState(false)
 
     const removeVideo = async (index, videoId, _id) => {
-        const ask = await askConfirm("Are you sure? You want to remove this video.")
-        if (!ask) return;
+        try {
+            const ask = await askConfirm("Are you sure? You want to remove this video.")
+            if (!ask) return;
 
-        // update the state
-        setVideoLinks(videoLinks.filter((_, i) => i !== index))
+            // update the state
+            setVideoLinks(videoLinks.filter((_, i) => i !== index))
 
-        // delete based on the session
-        if (session) {
-            await deleteVideo({ videoId: _id })
-        } else {
-            removeVideoFromLocalStorage(videoId)
+            // delete based on the session
+            if (session) {
+                await deleteVideo({ videoId: _id })
+            } else {
+                removeVideoFromLocalStorage(videoId)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error?.message)
+            setProcessing(false)
         }
     }
 
+    // remove all videos
     const removeAllVideos = async () => {
-        const ask = await askConfirm("Are you sure? You want to remove all videos.")
-        if (!ask) return;
+        try {
+            setProcessing(true)
+            const ask = await askConfirm("Are you sure? You want to remove all videos. 🤨")
+            if (!ask) return;
 
-        if (!session) {
-            await localStorage.removeItem('videos')
-            setVideoLinks([])
+            if (session) {
+                const res = await deleteAllVideos({ userId: session?.user?.id })
+                if (res?.error) {
+                    toast.error(res?.error)
+                }
+                if (res?.success) {
+                    setVideoLinks([])
+                }
+            } else {
+                await localStorage.removeItem('videos')
+                setVideoLinks([])
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error?.message)
+        } finally {
+            setProcessing(false)
         }
     }
 
@@ -38,8 +63,8 @@ const VideosSection = ({ videoLinks, setVideoLinks, session }) => {
                 {!session && <p className='text-xs sm:text-sm italic'>Sign in for more features</p>}
                 {videoLinks.length > 0 &&
                     <>
-                        <p className='text-xs sm:text-sm italic'>{session && "Go beyond the feed—watch what interests you!"}</p>
-                        <Button onClick={removeAllVideos} className="h-7" size="sm" variant="outline">Clear all</Button>
+                        <p className='text-xs sm:text-sm italic'>{session && "Go beyond the feed—watch what you need!"}</p>
+                        <Button onClick={removeAllVideos} className="h-7" size="sm" variant="outline">{processing ? "Processing..." : "Clear all"}</Button>
                     </>}
             </div>
             <Videos videos={videoLinks} removeVideo={removeVideo} />
