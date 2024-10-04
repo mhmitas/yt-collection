@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { ModeToggle } from './ModeToggle'
-import { Check } from 'lucide-react'
+import { Check, LoaderCircle } from 'lucide-react'
 import { getVideoId, saveVideoToLocalStorage } from '@/lib/utils'
 import { saveVideo } from '@/lib/actions/video.action'
 import toast from 'react-hot-toast'
@@ -16,6 +16,7 @@ const Header = ({
     setVideoLinks,
     session
 }) => {
+    const [processing, setProcessing] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -27,27 +28,29 @@ const Header = ({
 
         const videoId = getVideoId(videoLink)
 
-        // set link to the state
-        setVideoLinks([{
-            videoId,
-            createdAt: Date.now(),
-            pinned: false
-        }, ...videoLinks])
-        setVideoLink('')
-
         // if session exists, save to the database otherwise save to the local storage. 
         if (session) {
             try {
+                setProcessing(true)
                 const res = await saveVideo({ videoId, userId: session?.user?.id })
                 if (res.error) {
-                    toast.error(res?.error)
+                    return toast.error(res?.error)
                 }
+                setVideoLinks([res?.data, ...videoLinks])
+                setVideoLink('')
             } catch (error) {
                 console.log(error)
                 toast.error(error?.message || "Something went wrong! Please try again later")
-            }
+            } finally { setProcessing(false) }
         } else {
-            saveToLocalStorage()
+            await saveToLocalStorage()
+            // set link to the state
+            setVideoLinks([{
+                videoId,
+                createdAt: Date.now(),
+                pinned: false
+            }, ...videoLinks])
+            setVideoLink('')
         }
     };
 
@@ -77,7 +80,12 @@ const Header = ({
                                 placeholder="Paste YouTube video link here"
                                 className="flex-grow rounded-full rounded-r-none pl-6 sm:p-6 border-r-0 text-blue-500"
                             />
-                            <Button disabled={videoLink.length < 11} title="Click to save video" type="submit" className="border border-l-0 rounded-l-none sm:p-6 rounded-r-full"><Check /></Button>
+                            <Button disabled={videoLink.length < 11} title="Click to save video" type="submit" className="border border-l-0 rounded-l-none sm:p-6 rounded-r-full disabled:opacity-85">
+                                {processing ?
+                                    <span className='animate-spin'><LoaderCircle /></span> :
+                                    "Save"
+                                }
+                            </Button>
                         </form>
                     </CardContent>
                 </Card>

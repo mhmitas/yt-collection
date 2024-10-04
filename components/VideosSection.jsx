@@ -19,7 +19,7 @@ const VideosSection = ({ videoLinks, setVideoLinks, session }) => {
 
             // delete based on the session
             if (session) {
-                await deleteVideo({ videoId: _id })
+                await deleteVideo({ _id })
             } else {
                 removeVideoFromLocalStorage(videoId)
             }
