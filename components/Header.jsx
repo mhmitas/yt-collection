@@ -42,7 +42,6 @@ const Header = ({
                 if (res.error) {
                     toast.error(res?.error)
                 }
-                console.log(res)
             } catch (error) {
                 console.log(error)
                 toast.error(error?.message || "Something went wrong! Please try again later")
