@@ -21,7 +21,7 @@ const VideosSection = ({ videoLinks, setVideoLinks, session }) => {
             if (session) {
                 await deleteVideo({ _id })
             } else {
-                removeVideoFromLocalStorage(videoId)
+                await removeVideoFromLocalStorage(videoId)
             }
         } catch (error) {
             console.log(error)
