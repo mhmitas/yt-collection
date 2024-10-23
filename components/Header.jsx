@@ -78,7 +78,7 @@ const Header = ({
                                 value={videoLink}
                                 onChange={(e) => setVideoLink(e.target.value)}
                                 placeholder="Paste YouTube video link here"
-                                className="flex-grow rounded-full rounded-r-none pl-6 sm:p-6 border-r-0 text-blue-500"
+                                className="flex-grow rounded-full rounded-r-none pl-6 sm:p-6 border-r-0 text-blue-500 transition-all"
                             />
                             <Button disabled={videoLink.length < 11} title="Click to save video" type="submit" className="border border-l-0 rounded-l-none sm:p-6 rounded-r-full disabled:opacity-85">
                                 {processing ?
